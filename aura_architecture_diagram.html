@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aura Talent Platform: System Architecture</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .diagram {
+            padding: 40px;
+            background: #f8f9fa;
+        }
+
+        .layer {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .layer-title {
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px 10px 0 0;
+            font-weight: 600;
+            font-size: 1.2em;
+            margin-bottom: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .layer-content {
+            background: white;
+            border: 3px solid #34495e;
+            border-top: none;
+            border-radius: 0 0 15px 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .components {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .component {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            min-width: 180px;
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .component:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(52, 152, 219, 0.4);
+        }
+
+        .component.user {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            box-shadow: 0 8px 20px rgba(231, 76, 60, 0.3);
+        }
+
+        .component.user:hover {
+            box-shadow: 0 12px 25px rgba(231, 76, 60, 0.4);
+        }
+
+        .component.frontend {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            box-shadow: 0 8px 20px rgba(243, 156, 18, 0.3);
+        }
+
+        .component.frontend:hover {
+            box-shadow: 0 12px 25px rgba(243, 156, 18, 0.4);
+        }
+
+        .component.ai {
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+            box-shadow: 0 8px 20px rgba(155, 89, 182, 0.3);
+        }
+
+        .component.ai:hover {
+            box-shadow: 0 12px 25px rgba(155, 89, 182, 0.4);
+        }
+
+        .component.data {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            box-shadow: 0 8px 20px rgba(39, 174, 96, 0.3);
+        }
+
+        .component.data:hover {
+            box-shadow: 0 12px 25px rgba(39, 174, 96, 0.4);
+        }
+
+        .component-title {
+            font-weight: 700;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+        }
+
+        .component-desc {
+            font-size: 0.9em;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        .flow-arrow {
+            display: flex;
+            justify-content: center;
+            margin: -10px 0;
+            z-index: 10;
+            relative;
+        }
+
+        .arrow {
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-top: 30px solid #34495e;
+            filter: drop-shadow(0 3px 6px rgba(0,0,0,0.2));
+        }
+
+        .special-layer {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .special-layer .layer-title {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .special-layer .layer-content {
+            border-color: #667eea;
+        }
+
+        .description {
+            background: white;
+            padding: 30px;
+            margin-top: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .description h3 {
+            color: #2c3e50;
+            margin-top: 0;
+            font-size: 1.4em;
+        }
+
+        .description p {
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .components {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .component {
+                min-width: 250px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Aura Talent Platform</h1>
+            <p style="margin: 10px 0 0 0; font-size: 1.2em; opacity: 0.9;">System Architecture</p>
+        </div>
+
+        <div class="diagram">
+            <!-- User Layer -->
+            <div class="layer">
+                <div class="layer-title">1. User Layer</div>
+                <div class="layer-content">
+                    <div class="components">
+                        <div class="component user">
+                            <div class="component-title">Hiring Manager</div>
+                            <div class="component-desc">Accesses HR Admin Portal for talent management</div>
+                        </div>
+                        <div class="component user">
+                            <div class="component-title">Candidate</div>
+                            <div class="component-desc">Interacts via Careers Site & Candidate Portal</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-arrow">
+                <div class="arrow"></div>
+            </div>
+
+            <!-- Frontend Layer -->
+            <div class="layer">
+                <div class="layer-title">2. Frontend Application</div>
+                <div class="layer-content">
+                    <div class="components">
+                        <div class="component frontend">
+                            <div class="component-title">Next.js Web App</div>
+                            <div class="component-desc">Unified codebase serving multiple interfaces on Vercel/Cloud</div>
+                        </div>
+                        <div class="component frontend">
+                            <div class="component-title">API Gateway</div>
+                            <div class="component-desc">Secure communication bridge to backend services</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-arrow">
+                <div class="arrow"></div>
+            </div>
+
+            <!-- Backend Layer -->
+            <div class="layer">
+                <div class="layer-title">3. Backend Services</div>
+                <div class="layer-content">
+                    <div class="components">
+                        <div class="component">
+                            <div class="component-title">Authentication</div>
+                            <div class="component-desc">Secure login & session management</div>
+                        </div>
+                        <div class="component">
+                            <div class="component-title">Application Logic</div>
+                            <div class="component-desc">Jobs, applications, interviews workflow</div>
+                        </div>
+                        <div class="component">
+                            <div class="component-title">AI Orchestrator</div>
+                            <div class="component-desc">Prompts & AI model communication bridge</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-arrow">
+                <div class="arrow"></div>
+            </div>
+
+            <!-- AI Layer -->
+            <div class="layer special-layer">
+                <div class="layer-title">4. AI & Intelligence Layer</div>
+                <div class="layer-content">
+                    <div class="components">
+                        <div class="component ai">
+                            <div class="component-title">Job Description Agent</div>
+                            <div class="component-desc">Automated job posting optimization</div>
+                        </div>
+                        <div class="component ai">
+                            <div class="component-title">Screening Agent</div>
+                            <div class="component-desc">Intelligent candidate matching</div>
+                        </div>
+                        <div class="component ai">
+                            <div class="component-title">Interview Agent</div>
+                            <div class="component-desc">AI-powered interview simulation</div>
+                        </div>
+                        <div class="component ai">
+                            <div class="component-title">Authenticity Agent</div>
+                            <div class="component-desc">Credential & profile verification</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-arrow">
+                <div class="arrow"></div>
+            </div>
+
+            <!-- Data Layer -->
+            <div class="layer">
+                <div class="layer-title">5. Data & Storage Layer</div>
+                <div class="layer-content">
+                    <div class="components">
+                        <div class="component data">
+                            <div class="component-title">PostgreSQL Database</div>
+                            <div class="component-desc">Structured data: profiles, jobs, applications</div>
+                        </div>
+                        <div class="component data">
+                            <div class="component-title">AWS S3 Storage</div>
+                            <div class="component-desc">Secure file storage: CVs & portfolios</div>
+                        </div>
+                        <div class="component data">
+                            <div class="component-title">Vector Database</div>
+                            <div class="component-desc">AI embeddings for semantic search & matching</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="description">
+            <h3>Architecture Overview</h3>
+            <p>This system architecture represents a modern, scalable, and secure talent platform that leverages AI to revolutionize the hiring process. The design follows a clear separation of concerns with distinct layers for user interaction, business logic, AI intelligence, and data persistence.</p>
+            
+            <p>The platform supports two primary user types through specialized interfaces while maintaining a unified backend infrastructure. The AI layer provides the "magic" through specialized agents that handle different aspects of the hiring process, from job description optimization to candidate authenticity verification.</p>
+            
+            <p>Data flows seamlessly from user interactions through secure APIs, intelligent processing layers, and into robust storage systems designed for both traditional relational data and modern AI-powered semantic search capabilities.</p>
+        </div>
+    </div>
+
+    <script>
+        // Add interactive hover effects
+        document.querySelectorAll('.component').forEach(component => {
+            component.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px) scale(1.02)';
+            });
+            
+            component.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Add subtle animations on load
+        window.addEventListener('load', function() {
+            const layers = document.querySelectorAll('.layer');
+            layers.forEach((layer, index) => {
+                layer.style.opacity = '0';
+                layer.style.transform = 'translateY(30px)';
+                layer.style.transition = 'all 0.6s ease';
+                
+                setTimeout(() => {
+                    layer.style.opacity = '1';
+                    layer.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        });
+    </script>
+</body>
+</html>
