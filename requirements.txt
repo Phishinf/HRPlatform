@@ -1,0 +1,9 @@
+flask
+django
+gunicorn
+unicorn
+requests
+sqlalchemy
+sqlite3
+wtforms
+jinja2
